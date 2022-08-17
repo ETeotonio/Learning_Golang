@@ -9,15 +9,13 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type configapi struct {
-	apiKey     string
-	apiAddress string
-
-	dbKey string
-	dbUri string
+type ConfigApi struct {
+	apiaddress string
+	apikey     string
+	dbkey      string
+	dburi      string
 }
 
-var data = make(map[string]configapi)
 var config_file = "config.yml"
 
 func main() {
@@ -26,7 +24,7 @@ func main() {
 		fmt.Println("creating config file...")
 		createConfigFile()
 	} else {
-
+		getConfig()
 	}
 }
 
@@ -42,17 +40,17 @@ func createConfigFile() {
 }
 
 func getConfig() {
-	config_file, err := ioutil.ReadFile(config_file)
+	config_file1, err := ioutil.ReadFile(config_file)
 	if err != nil {
 		panic(err)
 	}
-	err2 := yaml.Unmarshal(config_file, &data)
+	// data := make(map[interface{}]interface{})
+	data := make(map[string]ConfigApi)
+	err2 := yaml.Unmarshal(config_file1, &data)
 	if err2 != nil {
 		panic(err2)
 	}
-
+	for k, v := range data {
+		fmt.Print(k, v)
+	}
 }
-
-// func getTickerPrice string(ticker string){
-// 	return ""
-// }
