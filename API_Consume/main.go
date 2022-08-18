@@ -3,20 +3,20 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 
-	"gopkg.in/yaml.v3"
+	"gopkg.in/ini.v1"
 )
 
-type ConfigApi struct {
+type configapi struct {
 	apiaddress string
 	apikey     string
 	dbkey      string
 	dburi      string
 }
 
-var config_file = "config.yml"
+var config_file = "config.ini"
+var confs configapi
 
 func main() {
 	_, err := os.Stat(config_file)
@@ -25,11 +25,13 @@ func main() {
 		createConfigFile()
 	} else {
 		getConfig()
+		getTickerPrice(confs.apikey, confs.apiaddress)
 	}
 }
 
 func createConfigFile() {
-	config := "apiKey:\n"
+	config := "[appconfig]"
+	config += "apiKey:\n"
 	config += "apiAddress:\n"
 	config += "dbKey:\n"
 	config += "dbUri:"
@@ -40,17 +42,14 @@ func createConfigFile() {
 }
 
 func getConfig() {
-	config_file1, err := ioutil.ReadFile(config_file)
+	cfg, err := ini.Load(config_file)
 	if err != nil {
 		panic(err)
+
 	}
-	// data := make(map[interface{}]interface{})
-	data := make(map[string]ConfigApi)
-	err2 := yaml.Unmarshal(config_file1, &data)
-	if err2 != nil {
-		panic(err2)
-	}
-	for k, v := range data {
-		fmt.Print(k, v)
-	}
+	confs.apiaddress = cfg.Section("appconfig").Key("apiaddress").String()
+	confs.apikey = cfg.Section("appconfig").Key("apikey").String()
+	confs.dbkey = cfg.Section("appconfig").Key("dbkey").String()
+	confs.dburi = cfg.Section("appconfig").Key("dburi").String()
+
 }
