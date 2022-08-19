@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"gopkg.in/ini.v1"
 )
@@ -13,6 +14,7 @@ type configapi struct {
 	apikey     string
 	dbkey      string
 	dburi      string
+	ticker     string
 }
 
 var config_file = "config.ini"
@@ -25,7 +27,8 @@ func main() {
 		createConfigFile()
 	} else {
 		getConfig()
-		getTickerPrice(confs.apikey, confs.apiaddress)
+		getTickerPrice(confs.apikey, confs.apiaddress, strings.Split(confs.ticker, ","))
+
 	}
 }
 
@@ -51,5 +54,5 @@ func getConfig() {
 	confs.apikey = cfg.Section("appconfig").Key("apikey").String()
 	confs.dbkey = cfg.Section("appconfig").Key("dbkey").String()
 	confs.dburi = cfg.Section("appconfig").Key("dburi").String()
-
+	confs.ticker = cfg.Section("tickers").Key("ticker_list").String()
 }
