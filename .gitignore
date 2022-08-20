@@ -4,3 +4,5 @@ API_Consume/config.ini
 .vscode/launch.json
 API_Consume/go.sum
 API_Consume/go.mod
+API_Consume/.vscode/launch.json
+API_Consume/test.json

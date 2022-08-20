@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -19,7 +18,6 @@ func getTickerPrice(apikey string, apiaddress string, tickers []string) {
 	for _, s := range tickers {
 		msg, _ := json.Marshal(map[string]interface{}{"type": "subscribe", "symbol": s})
 		websock.WriteMessage(websocket.TextMessage, msg)
-		fmt.Printf("%s", msg)
 	}
 	var msg interface{}
 	for {
@@ -27,7 +25,17 @@ func getTickerPrice(apikey string, apiaddress string, tickers []string) {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println("Message from server ", msg)
-		time.Sleep(120)
+		encoded_json, err := json.Marshal(msg)
+		msg_formatted := fmt.Sprintf("%s", encoded_json)
+		convert_price_json(msg_formatted)
+		break
 	}
 }
+
+//https://finnhub.io/docs/api/symbol-search
+// func ticker_search(apikey string, apiaddress string, company_names []string) {
+// 	formatted_websocket_address := apiaddress + "?token=" + apikey + "/search?q="
+// 	for company_name := range company_names {
+
+// 	}
+// }
