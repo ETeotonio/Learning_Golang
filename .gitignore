@@ -6,3 +6,6 @@ API_Consume/go.sum
 API_Consume/go.mod
 API_Consume/.vscode/launch.json
 API_Consume/test.json
+API_Consume/data_access.go
+API_Consume/infra_docker.yml
+.DS_Store
