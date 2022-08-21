@@ -14,6 +14,7 @@ type configapi struct {
 	apikey     string
 	dbkey      string
 	dburi      string
+	httpaddr   string
 	ticker     string
 }
 
@@ -27,8 +28,8 @@ func main() {
 		createConfigFile()
 	} else {
 		getConfig()
-		getTickerPrice(confs.apikey, confs.apiaddress, strings.Split(confs.ticker, ","))
-
+		// getTickerPrice(confs.apikey, confs.apiaddress, strings.Split(confs.ticker, ","))
+		get_ticker_codes(confs.apikey, confs.httpaddr, strings.Split("Apple,Petrobras,Stellantis,Coffee", ","))
 	}
 }
 
@@ -39,20 +40,22 @@ func createConfigFile() {
 	config += "dbKey:\n"
 	config += "dbUri:"
 	err := os.WriteFile(config_file, []byte(config), 0644)
-	if err != nil {
-		panic(err)
-	}
+	err_val(err)
 }
 
 func getConfig() {
 	cfg, err := ini.Load(config_file)
-	if err != nil {
-		panic(err)
-
-	}
+	err_val(err)
 	confs.apiaddress = cfg.Section("appconfig").Key("apiaddress").String()
 	confs.apikey = cfg.Section("appconfig").Key("apikey").String()
 	confs.dbkey = cfg.Section("appconfig").Key("dbkey").String()
 	confs.dburi = cfg.Section("appconfig").Key("dburi").String()
+	confs.httpaddr = cfg.Section("appconfig").Key("http_address").String()
 	confs.ticker = cfg.Section("tickers").Key("ticker_list").String()
+}
+
+func err_val(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
